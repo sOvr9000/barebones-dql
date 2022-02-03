@@ -28,6 +28,7 @@ class SuperSimpleEnvironment:
             target_direction = 0
         self.position[0] = np.roll(self.position[0], target_direction) # Move the target position.
 
+        # Supply the move_direction argument to move the current position.
         # move_direction is allowed to be -2, -1, 0, 1, or 2.
         cur_pos = np.argmax(self.position[1])
         if cur_pos + move_direction >= 9:
