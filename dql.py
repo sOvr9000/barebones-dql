@@ -1,7 +1,7 @@
 
 
 import numpy as np
-
+import tensorflow as tf
 
 
 # First, define an environment in which the agent will learn to maximize reward.
@@ -43,18 +43,56 @@ def get_reward(position):
     return 1. / (abs(np.argmax(position[0]) - np.argmax(position[1])) + 1)
 
 
+# Define the neural network to be used by the agent in the environment.
+# This model takes the position directly from the environment.
+# It outputs 5 values, each representing an approximation of the Q-value of each action that can be taken in the environment.
+# (There are five actions because move_direction can be either -2, -1, 0, 1, or 2.)
+# The agent uses this output by taking the action with the largest approximated Q-value.
+# Training this model increases the accuracy of the approximations over time, resulting in greater accumulation of reward.
+def build_model():
+    model = tf.keras.Sequential([
+        tf.keras.layers.InputLayer((2,9)), # Each position in the environment is an array of this shape.
+        tf.keras.layers.Flatten(), # Flatten it to a 1D array of 18 elements.
+        tf.keras.layers.Dense(32, 'relu'), # Dense layers...
+        tf.keras.layers.Dense(32, 'relu'),
+        tf.keras.layers.Dense(5), # The output layer with linear activation, producing an approximation of the Q-values of the five actions.
+    ])
+    model.compile('adam', 'msle')
+    # Mean squared error is fairly standard, but mean squared logarithmic error can be better for certain reward functions such as the one defined above.
+    # Adam optimzer is also pretty standard. RMSProp may be better for recurrent neural networks.
+    return model
 
+
+
+###############################################################
+model = build_model()
 env = SuperSimpleEnvironment()
 
 print(env.position)
 for i in range(20):
     print('-'*57)
-    action = np.random.randint(-2,3)
+    action = np.argmax(model.predict(np.expand_dims(env.position, 0))) - 2
+    # Keras models assume there's a batch dimension, so the position is nested in another array so that it is at index 0 along the batch dimension.
+    # Subtract 2 so that the discrete interval [0,4] becomes [-2,2]
     print(f'Move by {action:+}')
     env.step(action)
     print(env.position)
     reward = get_reward(env.position)
     print(f'Received reward {reward:.4f}')
+
+
+
+###############################################################
+# env = SuperSimpleEnvironment()
+# print(env.position)
+# for i in range(20):
+#     print('-'*57)
+#     action = np.random.randint(-2,3)
+#     print(f'Move by {action:+}')
+#     env.step(action)
+#     print(env.position)
+#     reward = get_reward(env.position)
+#     print(f'Received reward {reward:.4f}')
 
 
 
