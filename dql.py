@@ -37,6 +37,13 @@ class SuperSimpleEnvironment:
         self.position[1] = np.roll(self.position[1], move_direction) # Move the current position.
 
 
+# Now, define the reward function.
+# This one is defined as the inverse of the distance (offset by 1) between the current position and the target position.
+def get_reward(position):
+    return 1. / (abs(np.argmax(position[0]) - np.argmax(position[1])) + 1)
+
+
+
 env = SuperSimpleEnvironment()
 
 print(env.position)
@@ -46,5 +53,19 @@ for i in range(20):
     print(f'Move by {action:+}')
     env.step(action)
     print(env.position)
+    reward = get_reward(env.position)
+    print(f'Received reward {reward:.4f}')
+
+
+
+###############################################################
+# env = SuperSimpleEnvironment()
+# print(env.position)
+# for i in range(20):
+#     print('-'*57)
+#     action = np.random.randint(-2,3)
+#     print(f'Move by {action:+}')
+#     env.step(action)
+#     print(env.position)
 
 
