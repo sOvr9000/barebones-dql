@@ -71,11 +71,11 @@ env = SuperSimpleEnvironment()
 print(env.position)
 for i in range(20):
     print('-'*57)
-    action = np.argmax(model.predict(np.expand_dims(env.position, 0))) - 2
+    action = np.argmax(model.predict(np.expand_dims(env.position, 0)))
     # Keras models assume there's a batch dimension, so the position is nested in another array so that it is at index 0 along the batch dimension.
-    # Subtract 2 so that the discrete interval [0,4] becomes [-2,2]
     print(f'Move by {action:+}')
-    env.step(action)
+    env.step(action - 2)
+    # Subtract 2 so that the 0th action is -2, 1st action is -1, 2nd action is 0, 3rd action is 1, and 4th action is 2.
     print(env.position)
     reward = get_reward(env.position)
     print(f'Received reward {reward:.4f}')
