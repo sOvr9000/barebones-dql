@@ -107,7 +107,7 @@ while True:
     # Next, use the update rule to train the model on its own predictions, but with one of them slightly more accurate than before.
     pred_old_states = model.predict(sample_old_states)
     pred_new_states = model.predict(sample_new_states)
-    pred_old_states[np.arange(16),sample_actions] = sample_rewards + 0.98 * np.max(pred_new_states)
+    pred_old_states[np.arange(16),sample_actions] = sample_rewards + 0.98 * np.max(pred_new_states, axis=1)
 
     model.fit(sample_old_states, pred_old_states, verbose=False)
 
