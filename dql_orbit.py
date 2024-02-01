@@ -49,7 +49,6 @@ class OrbitEnvironment:
         self.target_radius = 1
         self.current_radius = 1
         self.fuel = 50 # A hard limit, the agent has this many attempts to thrust into perfect orbit.
-        self.total_steps = 0
         self.terminal = False
     def step(self, action: int):
         if action == 0:
@@ -117,7 +116,6 @@ actions = []
 rewards = []
 terminals = []
 
-epsilon = 1
 epsilon_period = 1024
 force_reset_period = 2048 # sometimes an elliptical orbit is achieved and the simulation runs forever
 

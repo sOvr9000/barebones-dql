@@ -15,7 +15,6 @@ class SuperSimpleEnvironment:
             [False, False, False, False, False, True, False, False, False], # The "True" position is the target position.
             [True, False, False, False, False, False, False, False, False], # The "True" position is the current position.
         ], dtype=bool)
-        self.total_steps = 0
         # The goal is to move the current position under the target position by moving left, moving right, or staying in place.
     def step(self, move_direction):
         # Every step, the target position either moves left, moves right, or stays in place.
